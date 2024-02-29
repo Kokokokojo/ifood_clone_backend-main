@@ -8,3 +8,4 @@ twilio==8.13.0
 django-allauth
 dj-rest-auth
 python-dotenv
+mysqlclient
