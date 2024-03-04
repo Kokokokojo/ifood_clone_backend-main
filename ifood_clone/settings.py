@@ -109,14 +109,15 @@ WSGI_APPLICATION = 'ifood_clone.wsgi.application'
 #     }
 # }
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bytemenow_backend',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '3306'
+        'NAME': os.environ.get("DB_NAME", ''),
+        'USER': os.environ.get("DB_USER", ''),
+        'PASSWORD': os.environ.get("DB_PASS", ''),
+        'HOST': os.environ.get("DB_HOST", ''),
+        'PORT': os.environ.get("DB_PORT", ''),
     }
 }
 
