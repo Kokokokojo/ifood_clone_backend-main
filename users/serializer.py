@@ -19,15 +19,12 @@ class UserSerializer(serializers.ModelSerializer):
             'is_active',
             'is_superuser',
             'is_staff',
-            'google_id',
         ]
 
     def create(self, validated_data):
 
-        google_id = str(validated_data.get('google_id', ''))
         
         user = CustomUser.objects.create(
-            google_id =google_id,
             first_name = validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', ''),
 

@@ -1,6 +1,7 @@
 from django.db import models as db
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+
 # Create your models here.
 
 
@@ -51,7 +52,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = db.EmailField(max_length=45, unique=True, blank=True, null=True)
 
     otp = db.CharField(max_length=6, null=True, blank=True) 
-    google_id = db.CharField(max_length=21,null=True, blank=True)
+    otp_expiration = db.DateTimeField(blank=True, null=True)
 
 
     created_at = db.DateTimeField(auto_now_add=True)
@@ -59,6 +60,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     is_active = db.BooleanField(default=True)
     is_staff = db.BooleanField(default=False)
+
+
+    # @property
+    # def expired_otp(self) -> bool:
+    #     mins_expire = timezone.now() + timezone.timedelta(seconds=1)
+
+    #     if timezone.now() > mins_expire:
+    #         user = CustomUser.objects.get(id = self.id)
+    #         user.otp = None
+    #         user.save()
+
+    #         return True
+
 
     objects = UserManager()
 

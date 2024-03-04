@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-from django.shortcuts import render
+from django.utils import timezone
 
 ## Login system
 
@@ -30,6 +30,7 @@ class LoginWithEmailOTP(APIView):
 
         otp = generate_otp()
         user.otp = otp
+        user.otp_expiration = timezone.now() + timezone.timedelta(minutes=3)
         user.save()
 
         send_otp_email(email, otp, user.first_name)
@@ -51,6 +52,7 @@ class LoginWithPhoneOTP(APIView):
 
         otp = generate_otp()
         user.otp = otp
+        user.otp_expiration = timezone.now() + timezone.timedelta(minutes=3)
         user.save()
 
         send_otp_phone(phone, otp, user.first_name)
@@ -64,12 +66,19 @@ class LoginWithPhoneOTP(APIView):
 class ValidateOTP(APIView):
     def post(self, request):
 
-        # email = request.data.get('email', '')
+        email = request.data.get('email', '')
         otp = request.data.get('otp', '')
     
 
         try:
-            user = CustomUser.objects.get(otp=otp, is_active=True)
+            user = CustomUser.objects.get(email=email, is_active=True)
+
+            if user.otp_expiration is not None and timezone.now() > user.otp_expiration:
+                user.otp_expiration = None
+                user.otp = None
+                user.save()
+                return Response({'error_login_expired_otp': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
+
             
         except CustomUser.DoesNotExist:
             return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
@@ -89,7 +98,7 @@ class ValidateOTP(APIView):
 
             return Response(user_data, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error_login_invalid_otp': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
 
 ## Login system
 
