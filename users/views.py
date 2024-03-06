@@ -67,23 +67,30 @@ class ValidateOTP(APIView):
     def post(self, request):
 
         email = request.data.get('email', '')
+        phone = request.data.get('phone', '')
         otp = request.data.get('otp', '')
     
 
         try:
             user = CustomUser.objects.get(email=email, is_active=True)
-
-            if user.otp_expiration is not None and timezone.now() > user.otp_expiration:
-                user.otp_expiration = None
-                user.otp = None
-                user.save()
-                return Response({'error_login_expired_otp': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
-
             
         except CustomUser.DoesNotExist:
+
+            user = CustomUser.objects.get(phone=phone, is_active=True)
+
+        except CustomUser.DoesNotExist:
+
             return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
-        
+
+
+        if user.otp_expiration is not None and timezone.now() > user.otp_expiration:
+            user.otp_expiration = None
+            user.otp = None
+            user.save()
+            return Response({'error_login_expired_otp': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
         if user.otp == otp:
             user.otp = None  # Reset the OTP field after successful validation
