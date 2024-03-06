@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (LoginWithEmailOTP,
                     LoginWithPhoneOTP, 
-                    ValidateOTP, me, register_user,
+                    ValidateOTPlogin, me, register_user,
                       ValidateOTPemail, 
                       ValidateOTPphone, register_user_email, register_user_phone,
                       GoogleLogin, edit_personal_data
@@ -16,7 +16,7 @@ urlpatterns = [
     # Login email/telefone
     path('login-email-otp/', LoginWithEmailOTP.as_view(), name='login-with-otp-email'),
     path('login-phone-otp/', LoginWithPhoneOTP.as_view(), name='login-with-otp-phone'),
-    path('validate-otp/', ValidateOTP.as_view(), name='validate-otp'),
+    path('validate-otp/', ValidateOTPlogin.as_view(), name='validate-otp'),
     # Login email/telefone
 
     # Retornar dados do usuario

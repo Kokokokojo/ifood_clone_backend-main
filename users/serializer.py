@@ -5,6 +5,8 @@ from users.validators import CustomUserValidator
 
 class UserSerializer(serializers.ModelSerializer):
 
+    
+
     class Meta:
         model = CustomUser
 
@@ -16,6 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'cpf',
 
+            'phone_confirmed_in',
+            'email_confirmed_in',
             'is_active',
             'is_superuser',
             'is_staff',

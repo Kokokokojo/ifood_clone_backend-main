@@ -3,7 +3,7 @@ from django.db.models import Q
 from rest_framework.response import Response 
 from rest_framework import status
 from .auth_otp import generate_otp, send_otp_email, send_otp_phone
-from .models import CustomUser, Address
+from .models import CustomUser, Address, SocialaccountSocialaccount
 from .serializer import UserSerializer, UserPatchCreateSerializer, UserPatchSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
@@ -63,7 +63,7 @@ class LoginWithPhoneOTP(APIView):
 
 
 
-class ValidateOTP(APIView):
+class ValidateOTPlogin(APIView):
     def post(self, request):
 
         email = request.data.get('email', '')
@@ -120,7 +120,13 @@ def me(request):
     user_get = CustomUser.objects.get(Q(email=request.user.email) & Q(is_active=True))
     serializer_user = UserSerializer(instance=user_get, many=False)
 
-    return Response(serializer_user.data, status=status.HTTP_200_OK)
+    conf = SocialaccountSocialaccount.objects.get(user_id = user_get.id)
+
+    data={}
+    data.update(serializer_user.data)
+    data.update({"date_joined":conf.date_joined})
+
+    return Response(data, status=status.HTTP_200_OK)
 
 
 ## User data
@@ -173,6 +179,8 @@ class ValidateOTPemail(APIView):
 
         if user.otp == otp:
             user.otp = None  
+            user.email_confirmed_in = timezone.now()
+
             user.save()
 
 
@@ -221,13 +229,13 @@ class ValidateOTPphone(APIView):
 
         if user.otp == otp:
             user.otp = None  # Reset the OTP field after successful validation
+            user.phone_confirmed_in = timezone.now()
             user.save()
 
 
             return Response({'message': 'Phone OTP confirmed.', "success":True}, status=status.HTTP_200_OK)
         else:
             return Response({'error_invalid_otp': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 

@@ -57,6 +57,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     created_at = db.DateTimeField(auto_now_add=True)
     updated_at = db.DateTimeField(auto_now=True)
+    email_confirmed_in = db.DateTimeField(default=None)
+    phone_confirmed_in = db.DateTimeField(default=None)
     
     is_active = db.BooleanField(default=True)
     is_staff = db.BooleanField(default=False)
@@ -107,3 +109,20 @@ class Address(db.Model):
 
     def __str__(self):
         return self.name
+
+
+
+class SocialaccountSocialaccount(db.Model):
+    provider = db.CharField(max_length=200)
+    uid = db.CharField(max_length=191)
+    last_login = db.DateTimeField()
+    date_joined = db.DateTimeField()
+    extra_data = db.JSONField()
+    user = db.ForeignKey('CustomUser', db.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialaccount'
+        unique_together = (('provider', 'uid'),)
+
+
