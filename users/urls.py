@@ -4,7 +4,7 @@ from .views import (LoginWithEmailOTP,
                     ValidateOTP, me, register_user,
                       ValidateOTPemail, 
                       ValidateOTPphone, register_user_email, register_user_phone,
-                      GoogleLogin,
+                      GoogleLogin, edit_personal_data
                       )
 
 
@@ -32,5 +32,8 @@ urlpatterns = [
     # Registrar usuario email/telefone
 
 
+    # Editar usuario 
+    path('edit-user-personal-data/', edit_personal_data, name='edit-user-personal-data'),
+    # Editar usuario 
 
 ]

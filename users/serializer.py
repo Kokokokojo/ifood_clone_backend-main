@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from users.models import CustomUser, Address
-
+from users.validators import CustomUserValidator
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -63,4 +63,31 @@ class UserPatchCreateSerializer(serializers.ModelSerializer):
 
         return instance
 
+
+
+
+
+# def required(value):
+#     if value is None:
+#         raise serializers.ValidationError('This field is required')
+    
+class UserPatchSerializer(serializers.ModelSerializer):
+
+
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            'first_name',
+            'last_name',
+            'cpf',
+        ]
+
+    def validate(self, attrs):
+
+        # if self.instance is not None and attrs.get('coisa_aqui') is None:
+        #     attrs['coisa_aqui'] = self.instance.coisa_aqui
         
+        CustomUserValidator(data=attrs, ErrorClass=serializers.ValidationError)
+
+        return super().validate(attrs)

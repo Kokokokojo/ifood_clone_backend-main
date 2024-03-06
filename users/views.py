@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .auth_otp import generate_otp, send_otp_email, send_otp_phone
 from .models import CustomUser, Address
-from .serializer import UserSerializer, UserPatchCreateSerializer
+from .serializer import UserSerializer, UserPatchCreateSerializer, UserPatchSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
@@ -246,6 +246,23 @@ def register_user(request):
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def edit_personal_data(request):
+    
+    user = get_object_or_404(CustomUser, id = request.data.get('id', ''))
+
+    serializer = UserPatchSerializer(instance=user,
+                                            data=request.data, 
+                                            many=False,
+                                            partial=True,)
+    serializer.is_valid(raise_exception=True)
+ 
+    serializer.save()
+
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 
