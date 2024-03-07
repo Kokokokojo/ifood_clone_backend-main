@@ -18,6 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'cpf',
 
+            'created_at',
+            'updated_at',
             'phone_confirmed_in',
             'email_confirmed_in',
             'is_active',
@@ -26,20 +28,14 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-
-        
         user = CustomUser.objects.create(
             first_name = validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', ''),
-
             email=validated_data.get('email', ''),
             phone=validated_data.get('phone', '')
-
         )
 
-        
         user.save()
-
         return user
         
        

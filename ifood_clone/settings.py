@@ -183,6 +183,8 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 
 REST_FRAMEWORK = {
+    'DATETIME_FORMAT': "%d-%m-%Y %H:%M:%S",
+
    'DEFAULT_AUTHENTICATION_CLASSES': (
        'rest_framework.authentication.TokenAuthentication',
    ),
