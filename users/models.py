@@ -1,5 +1,6 @@
 from django.db import models as db
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
 
 
 # Create your models here.
@@ -64,16 +65,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = db.BooleanField(default=False)
 
 
-    # @property
-    # def expired_otp(self) -> bool:
-    #     mins_expire = timezone.now() + timezone.timedelta(seconds=1)
+    @property
+    def expired_otp(self) -> bool:
+        user = CustomUser.objects.get(id = self.id)
 
-    #     if timezone.now() > mins_expire:
-    #         user = CustomUser.objects.get(id = self.id)
-    #         user.otp = None
-    #         user.save()
+        if user.otp_expiration is not None and timezone.now() > user.otp_expiration:
+            user.otp_expiration = None
+            user.otp = None
+            user.save()
 
-    #         return True
+            return True
 
 
     objects = UserManager()
@@ -109,20 +110,4 @@ class Address(db.Model):
 
     def __str__(self):
         return self.name
-
-
-
-class SocialaccountSocialaccount(db.Model):
-    provider = db.CharField(max_length=200)
-    uid = db.CharField(max_length=191)
-    last_login = db.DateTimeField()
-    date_joined = db.DateTimeField()
-    extra_data = db.JSONField()
-    user = db.ForeignKey('CustomUser', db.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'socialaccount_socialaccount'
-        unique_together = (('provider', 'uid'),)
-
 

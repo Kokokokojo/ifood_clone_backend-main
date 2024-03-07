@@ -3,7 +3,7 @@ from django.db.models import Q
 from rest_framework.response import Response 
 from rest_framework import status
 from .auth_otp import generate_otp, send_otp_email, send_otp_phone
-from .models import CustomUser, Address, SocialaccountSocialaccount
+from .models import CustomUser, Address
 from .serializer import UserSerializer, UserPatchCreateSerializer, UserPatchSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
@@ -72,27 +72,27 @@ class ValidateOTPlogin(APIView):
     
 
         try:
-            user = CustomUser.objects.get(email=email, is_active=True)
+            user = CustomUser.objects.get(Q(Q(email=email) | Q(phone=phone)) & Q(otp=otp) & Q(is_active=True))
             
-        except CustomUser.DoesNotExist:
-
-            user = CustomUser.objects.get(phone=phone, is_active=True)
-
         except CustomUser.DoesNotExist:
 
             return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 
-        if user.otp_expiration is not None and timezone.now() > user.otp_expiration:
-            user.otp_expiration = None
-            user.otp = None
-            user.save()
+
+        # if user.otp_expiration is not None and timezone.now() > user.otp_expiration:
+        #     user.otp_expiration = None
+        #     user.otp = None
+        #     user.save()
+        #     return Response({'error_login_expired_otp': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if user.expired_otp:
             return Response({'error_login_expired_otp': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
-
-
+        
 
         if user.otp == otp:
+            user.otp_expiration = None
             user.otp = None  # Reset the OTP field after successful validation
             user.save()
 
@@ -120,13 +120,7 @@ def me(request):
     user_get = CustomUser.objects.get(Q(email=request.user.email) & Q(is_active=True))
     serializer_user = UserSerializer(instance=user_get, many=False)
 
-    conf = SocialaccountSocialaccount.objects.get(user_id = user_get.id)
-
-    data={}
-    data.update(serializer_user.data)
-    data.update({"date_joined":conf.date_joined})
-
-    return Response(data, status=status.HTTP_200_OK)
+    return Response(serializer_user.data, status=status.HTTP_200_OK)
 
 
 ## User data
