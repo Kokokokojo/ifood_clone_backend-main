@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, APIView, permission_classes
 from django.db.models import Q
 from rest_framework.response import Response 
 from rest_framework import status
-from .auth_otp import generate_otp, send_otp_email, send_otp_phone
+from .auth_otp import generate_otp, send_otp_login_email, send_otp_phone
 from .models import CustomUser, Address
 from .serializer import UserSerializer, UserPatchCreateSerializer, UserPatchSerializer
 from rest_framework.authtoken.models import Token
@@ -33,7 +33,7 @@ class LoginWithEmailOTP(APIView):
         user.otp_expiration = timezone.now() + timezone.timedelta(minutes=3)
         user.save()
 
-        send_otp_email(email, otp, user.first_name)
+        send_otp_login_email(email, otp, user.first_name)
 
         return Response({'message': 'OTP has been sent to your email.', "success":True}, status=status.HTTP_200_OK)
 
@@ -151,7 +151,7 @@ def register_user_email(request):
     user.save()
 
 
-    send_otp_email(email, otp, email)
+    send_otp_login_email(email, otp, email)
 
     return Response({'message': 'OTP has been sent to your email.', "success":True}, status=status.HTTP_200_OK)
 

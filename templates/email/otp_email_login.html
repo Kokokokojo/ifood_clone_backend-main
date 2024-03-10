@@ -2,8 +2,10 @@
 <html>
 <head>
     <title>Login - Requisição</title>
+    {% load static %}
 </head>
 <body>
+    <img src="{% static 'img/b-logo.png' %}" alt="byteFood logo">
     <h1>Olá, {{user_name}}</h1>
     <p>Nós recebemos uma requisição para Login na sua conta Bytefood.</p>
     

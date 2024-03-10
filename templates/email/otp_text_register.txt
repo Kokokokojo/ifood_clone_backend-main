@@ -1,0 +1,4 @@
+OLá {{user_name}}, Nós recebemos seu pedido de criação de conta. 
+Código: {{otp}}
+
+Não compartilhe o compartilhe com ninguém.
