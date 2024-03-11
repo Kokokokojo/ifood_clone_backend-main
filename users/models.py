@@ -50,7 +50,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     cnpj = db.CharField(max_length=14, unique=True, blank=True, null=True)
 
     phone = db.CharField(max_length=20, blank=True, null=True)
-    email = db.EmailField(max_length=45, unique=True, blank=True, null=True)
+    email = db.EmailField(max_length=100, unique=True, blank=True, null=True)
 
     otp = db.CharField(max_length=6, null=True, blank=True) 
     otp_expiration = db.DateTimeField(blank=True, null=True)
