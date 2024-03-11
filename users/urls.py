@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import (LoginWithEmailOTP,
-                    LoginWithPhoneOTP, 
+from .views import (SendEmailOTP,
+                    SendPhoneOTP, 
                     ValidateOTPlogin, me, register_user,
                       ValidateOTPemail, 
                       ValidateOTPphone, register_user_email, register_user_phone,
-                      GoogleLogin, edit_personal_data, LoginUserOTP
+                      GoogleLogin, edit_personal_data, LoginUserPhoneOTP, LoginUserEmailOTP
                       )
 
 
@@ -14,10 +14,11 @@ urlpatterns = [
     # Login Google
 
     # Login email/telefone
-    path('login-email-otp/', LoginWithEmailOTP.as_view(), name='login-with-otp-email'),
-    path('login-phone-otp/', LoginWithPhoneOTP.as_view(), name='login-with-otp-phone'),
+    path('login-email-otp/', SendEmailOTP.as_view(), name='login-with-otp-email'),
+    path('login-phone-otp/', SendPhoneOTP.as_view(), name='login-with-otp-phone'),
     path('validate-otp/', ValidateOTPlogin.as_view(), name='validate-otp'),
-    path('login-user/', LoginUserOTP.as_view(), name='login-user'),
+    path('login-user-phone/', LoginUserPhoneOTP.as_view(), name='login-user-phone'),
+    path('login-user-email/', LoginUserEmailOTP.as_view(), name='login-user-email'),
 
     # Login email/telefone
 
