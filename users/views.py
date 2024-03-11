@@ -79,13 +79,6 @@ class ValidateOTPlogin(APIView):
             return Response({'error': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
 
-
-
-        # if user.otp_expiration is not None and timezone.now() > user.otp_expiration:
-        #     user.otp_expiration = None
-        #     user.otp = None
-        #     user.save()
-        #     return Response({'error_login_expired_otp': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
         
         if user.expired_otp:
             return Response({'error_login_expired_otp': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -93,19 +86,52 @@ class ValidateOTPlogin(APIView):
 
         if user.otp == otp:
             user.otp_expiration = None
-            user.otp = None  # Reset the OTP field after successful validation
+            user.otp = None  
             user.save()
 
             # Authenticate the user and create or get an authentication token
-            token, _ = Token.objects.get_or_create(user=user)
+            # token, _ = Token.objects.get_or_create(user=user)
 
-            user_data = {
-                'token': token.key
-            }
+            # user_data = {
+            #     'token': token.key
+            # }
+            serializer_user = UserSerializer(instance=user, many=False)
 
-            return Response(user_data, status=status.HTTP_200_OK)
+            return Response(serializer_user.data, status=status.HTTP_200_OK)
+        
         else:
             return Response({'error_login_invalid_otp': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class LoginUserOTP(APIView):
+    def post(self, request):
+
+        email = request.data.get('email', '')
+        phone = request.data.get('phone', '')
+
+        try:
+            user = CustomUser.objects.get(Q(Q(email=email) & Q(phone=phone)) & Q(is_active=True))
+            
+        except CustomUser.DoesNotExist:
+
+            return Response({'error_mail': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+        # Authenticate the user and create or get an authentication token
+        token, _ = Token.objects.get_or_create(user=user)
+
+        user_data = {
+            'token': token.key
+        }
+
+        return Response(user_data, status=status.HTTP_200_OK)
+
+
+
 
 ## Login system
 

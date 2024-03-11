@@ -4,7 +4,7 @@ from .views import (LoginWithEmailOTP,
                     ValidateOTPlogin, me, register_user,
                       ValidateOTPemail, 
                       ValidateOTPphone, register_user_email, register_user_phone,
-                      GoogleLogin, edit_personal_data
+                      GoogleLogin, edit_personal_data, LoginUserOTP
                       )
 
 
@@ -17,6 +17,8 @@ urlpatterns = [
     path('login-email-otp/', LoginWithEmailOTP.as_view(), name='login-with-otp-email'),
     path('login-phone-otp/', LoginWithPhoneOTP.as_view(), name='login-with-otp-phone'),
     path('validate-otp/', ValidateOTPlogin.as_view(), name='validate-otp'),
+    path('login-user/', LoginUserOTP.as_view(), name='login-user'),
+
     # Login email/telefone
 
     # Retornar dados do usuario
