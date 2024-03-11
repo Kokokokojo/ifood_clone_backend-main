@@ -58,8 +58,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     created_at = db.DateTimeField(auto_now_add=True)
     updated_at = db.DateTimeField(auto_now=True)
-    email_confirmed_in = db.DateTimeField(default=None, null=True)
-    phone_confirmed_in = db.DateTimeField(default=None, null=True)
+    email_confirmed_in = db.DateTimeField(default=None, null=True, blank=True)
+    phone_confirmed_in = db.DateTimeField(default=None, null=True, blank=True)
     
     is_active = db.BooleanField(default=True)
     is_staff = db.BooleanField(default=False)

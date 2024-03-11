@@ -326,6 +326,69 @@ def edit_personal_data(request):
 
 ## google
 
+class RegisterPhoneGoogle(APIView):
+    def post(self, request):
+
+        phone = request.data.get('phone', '')
+        email = request.data.get('email', '')
+
+        try:
+            user = CustomUser.objects.get(email=email, is_active=True)
+            if CustomUser.objects.filter(phone=phone, is_active=True).exists():
+                return Response({'phone_exists': 'User with this phone number already exists.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+        except CustomUser.DoesNotExist:
+            return Response({'error_no_account': 'User with this google account does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        
+
+        otp = generate_otp()
+        user.otp = otp
+        user.otp_expiration = timezone.now() + timezone.timedelta(minutes=3)
+        user.save()
+
+        send_otp_phone(phone, otp, user.first_name)
+
+        return Response({'message': 'OTP has been sent to your phone number.', 'success':True}, status=status.HTTP_200_OK)
+    
+
+class ValidateGoogleOTPphone(APIView):
+    def post(self, request):
+
+        email = request.data.get('email', '')
+        phone = request.data.get('phone', '')
+        otp = request.data.get('otp', '')
+    
+
+        try:
+            user = CustomUser.objects.get(Q(email=email) & Q(otp=otp) & Q(is_active=True))
+            
+        except CustomUser.DoesNotExist:
+
+            return Response({'error_google_account': 'User with this google account does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+        
+        if user.expired_otp:
+            return Response({'error_login_expired_otp': 'OTP expired.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+        if user.otp == otp:
+            user.otp_expiration = None
+            user.otp = None  
+            user.phone = phone
+            user.phone_confirmed_in = timezone.now()
+            user.save()
+
+            serializer_user = UserSerializer(instance=user, many=False)
+
+            return Response(serializer_user.data, status=status.HTTP_200_OK)
+        
+        else:
+            return Response({'error_login_invalid_otp': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class GoogleLogin(SocialLoginView):
 
 # https://dj-rest-auth.readthedocs.io/en/latest/installation.html#social-authentication-optional

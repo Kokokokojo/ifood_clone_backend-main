@@ -4,14 +4,17 @@ from .views import (SendEmailOTP,
                     ValidateOTPlogin, me, register_user,
                       ValidateOTPemail, 
                       ValidateOTPphone, register_user_email, register_user_phone,
-                      GoogleLogin, edit_personal_data, LoginUserPhoneOTP, LoginUserEmailOTP
+                      GoogleLogin, edit_personal_data, LoginUserPhoneOTP, LoginUserEmailOTP,
+                      RegisterPhoneGoogle, ValidateGoogleOTPphone
                       )
 
 
 urlpatterns = [
-    # Login Google
+    #  Google
     path('authenticate/google/', GoogleLogin.as_view(), name='google_login'),
-    # Login Google
+    path('authenticate/google/google-register-phone/', RegisterPhoneGoogle.as_view(), name='google_login'),
+    path('authenticate/google/google-validate-otp-phone/', ValidateGoogleOTPphone.as_view(), name='google_login'),
+    #  Google
 
     # Login email/telefone
     path('login-email-otp/', SendEmailOTP.as_view(), name='login-with-otp-email'),
