@@ -90,7 +90,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.first_name
-    
+
 
 
 
@@ -102,6 +102,7 @@ class Address(db.Model):
     complement = db.CharField(max_length=75, blank=False, null=False)
     city = db.CharField(max_length=75, blank=False, null=False)
     state = db.CharField(max_length=75, blank=False, null=False)
+    zip_code = db.CharField(max_length=8, blank=False, null=False)
 
     user = db.ForeignKey(CustomUser, on_delete=db.SET_NULL, null=True, blank=False)
 
@@ -110,4 +111,3 @@ class Address(db.Model):
 
     def __str__(self):
         return self.name
-
