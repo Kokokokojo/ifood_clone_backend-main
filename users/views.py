@@ -323,6 +323,107 @@ def edit_personal_data(request):
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def edit_email(request):
+     
+    email = request.data.get('email', '')
+    id = request.data.get('id', '')
+
+    try:
+        user = CustomUser.objects.get(Q(id=id) & Q(is_active = True))
+        
+    except CustomUser.DoesNotExist:
+        return Response({'user_does_not_exist': 'User with this id does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+    otp = generate_otp()
+    user.otp = otp
+
+    user.save()
+
+    send_otp_login_email(email, otp, email)
+
+    return Response({'message': 'OTP has been sent to your email.', "success":True}, status=status.HTTP_200_OK)
+
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def edit_email_confirm(request):
+    
+    id =  request.data.get('id', '')
+    email =  request.data.get('email', '')
+
+    try:
+        user = CustomUser.objects.get(Q(id=id) & Q(is_active = True))
+        
+    except CustomUser.DoesNotExist:
+        return Response({'user_does_not_exist': 'User with this id does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+    
+    user.otp = None
+    user.otp_expiration = None
+    user.email = email
+    user.save()
+
+    serializer = UserSerializer(instance=user, many=False)
+
+
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def edit_phone(request):
+     
+    phone = request.data.get('phone', '')
+    id = request.data.get('id', '')
+
+    try:
+        user = CustomUser.objects.get(Q(id=id) & Q(is_active = True))
+        
+    except CustomUser.DoesNotExist:
+        return Response({'user_does_not_exist': 'User with this id does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+    otp = generate_otp()
+    user.otp = otp
+
+    user.save()
+
+    send_otp_phone(phone, otp, user.first_name)
+
+    return Response({'message': 'OTP has been sent to your phone number.', "success":True}, status=status.HTTP_200_OK)
+
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def edit_phone_confirm(request):
+    
+    id =  request.data.get('id', '')
+    phone =  request.data.get('phone', '')
+
+    try:
+        user = CustomUser.objects.get(Q(id=id) & Q(is_active = True))
+        
+    except CustomUser.DoesNotExist:
+        return Response({'user_does_not_exist': 'User with this id does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+    
+    user.otp = None
+    user.otp_expiration = None
+    user.phone = phone
+    user.save()
+
+    serializer = UserSerializer(instance=user, many=False)
+
+
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 ## google
 
@@ -406,4 +507,3 @@ class GoogleLogin(SocialLoginView):
 
 
 ## google
-    
