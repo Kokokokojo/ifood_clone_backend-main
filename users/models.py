@@ -65,6 +65,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = db.BooleanField(default=False)
 
 
+
+
+
     @property
     def expired_otp(self) -> bool:
         user = CustomUser.objects.get(id = self.id)
@@ -76,21 +79,24 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
             return True
 
+    @property
+    def fullname(self) -> str:
+        user = CustomUser.objects.get(id = self.id)
+        return f"{user.first_name} {user.last_name}"
+    
+    class Meta:
+        ordering = ["id"]
+
+
+    def __str__(self):
+        return self.fullname
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name']
 
-
-
-
-    class Meta:
-        ordering = ["id"]
-
-    def __str__(self):
-        return self.first_name
-
+    
 
 
 
