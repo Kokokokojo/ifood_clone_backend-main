@@ -1,6 +1,7 @@
 from collections import defaultdict
 from django.forms import ValidationError
-from users.models import CustomUser, Address
+from users.models import CustomUser
+from addresses.models import Address
 from django.db.models import Q
 
 

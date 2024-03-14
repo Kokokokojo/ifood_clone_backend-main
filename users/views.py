@@ -3,7 +3,8 @@ from django.db.models import Q
 from rest_framework.response import Response 
 from rest_framework import status
 from .auth_otp import generate_otp, send_otp_login_email, send_otp_phone
-from .models import CustomUser, Address
+from .models import CustomUser
+from addresses.models import Address
 from .serializer import UserSerializer, UserPatchCreateSerializer, UserPatchSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated

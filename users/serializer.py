@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from users.models import CustomUser, Address
+from users.models import CustomUser
+from addresses.models import Address
 from users.validators import CustomUserValidator
 
 

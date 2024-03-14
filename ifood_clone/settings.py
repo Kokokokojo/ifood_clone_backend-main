@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'products',
     'restaurants',
+    'addresses',
 
     # Google auth 
     'allauth',
