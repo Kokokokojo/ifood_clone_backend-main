@@ -105,6 +105,7 @@ class LoginUserPhoneOTP(APIView):
 
         email = request.data.get('email', '')
         phone = request.data.get('phone', '')
+        otp = request.data.get('otp', '')
 
         try:
             user = CustomUser.objects.get(Q(Q(email=email) & Q(phone=phone)) & Q(is_active=True))
@@ -115,14 +116,21 @@ class LoginUserPhoneOTP(APIView):
 
 
 
-        # Authenticate the user and create or get an authentication token
-        token, _ = Token.objects.get_or_create(user=user)
+        if user.otp == otp:
+            user.otp_expiration = None
+            user.otp = None  
+            user.save()
 
-        user_data = {
-            'token': token.key
-        }
+            token, _ = Token.objects.get_or_create(user=user)
 
-        return Response(user_data, status=status.HTTP_200_OK)
+            user_data = {
+                'token': token.key
+            }
+            return Response(user_data, status=status.HTTP_200_OK)
+
+        else:
+            return Response({'error_login_invalid_otp': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class LoginUserEmailOTP(APIView):

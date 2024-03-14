@@ -18,8 +18,8 @@ urlpatterns = [
     #  Google
 
     # Login email/telefone
-    path('login-email-otp/', SendEmailOTP.as_view(), name='login-with-otp-email'),
-    path('login-phone-otp/', SendPhoneOTP.as_view(), name='login-with-otp-phone'),
+    path('send-email-otp/', SendEmailOTP.as_view(), name='login-with-otp-email'),
+    path('send-phone-otp/', SendPhoneOTP.as_view(), name='login-with-otp-phone'),
     path('validate-otp/', ValidateOTPlogin.as_view(), name='validate-otp'),
     path('login-user-phone/', LoginUserPhoneOTP.as_view(), name='login-user-phone'),
     path('login-user-email/', LoginUserEmailOTP.as_view(), name='login-user-email'),
