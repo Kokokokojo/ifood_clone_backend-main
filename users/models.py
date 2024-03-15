@@ -105,7 +105,7 @@ class Address(db.Model):
     street = db.CharField(max_length=75, blank=False, null=False)
     neighborhood = db.CharField(max_length=75, blank=False, null=False)
     number = db.CharField(max_length=75, blank=False, null=False)
-    complement = db.CharField(max_length=75, blank=False, null=False)
+    complement = db.CharField(max_length=75, blank=True, null=True)
     city = db.CharField(max_length=75, blank=False, null=False)
     state = db.CharField(max_length=75, blank=False, null=False)
     zip_code = db.CharField(max_length=8, blank=False, null=False)
