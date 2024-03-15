@@ -63,9 +63,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     is_active = db.BooleanField(default=True)
     is_staff = db.BooleanField(default=False)
-
-
-
+    receive_ads = db.BooleanField(default=False)
 
 
     @property
@@ -100,6 +98,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 
+<<<<<<< HEAD
 class Address(db.Model):
     name = db.CharField(max_length=75, blank=False, null=False)
     street = db.CharField(max_length=75, blank=False, null=False)
@@ -117,3 +116,5 @@ class Address(db.Model):
 
     def __str__(self):
         return self.name
+=======
+>>>>>>> fc2d1810266d1d99bf81c5d323c9430780531230
