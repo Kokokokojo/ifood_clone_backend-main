@@ -14,3 +14,6 @@ class Restaurant(db.Model):
     zip_code = db.CharField(max_length=8, blank=False, null=False)
     
     is_active = db.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name

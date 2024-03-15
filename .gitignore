@@ -1,7 +1,7 @@
 
 
 taedb.sqlite3
-
+media/products/logos/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 

@@ -6,8 +6,6 @@ from users.validators import CustomUserValidator
 
 class UserSerializer(serializers.ModelSerializer):
 
-    
-
     class Meta:
         model = CustomUser
 
