@@ -66,6 +66,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     receive_ads = db.BooleanField(default=False)
 
 
+
+
+
     @property
     def expired_otp(self) -> bool:
         user = CustomUser.objects.get(id = self.id)

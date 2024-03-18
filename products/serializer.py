@@ -15,7 +15,8 @@ class ProductSerializer(serializers.ModelSerializer):
             'price',
             'qtd',
             'image',
-            'restaurant_name'
+            'restaurant_name',
+            'restaurant',
         ]
 
         

@@ -2,6 +2,11 @@
 
 taedb.sqlite3
 media/products/logos/*
+media/restaurants/logos/*
+
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 

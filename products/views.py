@@ -21,7 +21,7 @@ from copy import deepcopy
 @parser_classes([MultiPartParser, FormParser])
 def register_product(request):
 
-    restaurant_id = request.data.get('restaurant_id', '')
+    restaurant_id = request.data.get('restaurant_id', -1)
 
     try:
         restaurant = Restaurant.objects.get(id = restaurant_id)
@@ -29,6 +29,8 @@ def register_product(request):
     except Restaurant.DoesNotExist:
 
         return Response({'restaurant_does_not_exist':'Restaurante inexistente'}, status=status.HTTP_404_NOT_FOUND)
+    
+
 
     price_formated = decimal.Decimal(request.data.get('price').replace(',', '.'))
     request.data['price'] = price_formated
@@ -42,5 +44,3 @@ def register_product(request):
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-
-    # return Response(serializer.data, status=status.HTTP_201_CREATED)
