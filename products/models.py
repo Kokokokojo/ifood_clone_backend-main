@@ -22,7 +22,8 @@ class Product(db.Model):
 class Category(db.Model):
     name = db.CharField(max_length=75, blank=False, null=False)
     description = db.CharField(max_length=100, blank=False, null=False)
-    
+    image = db.ImageField(upload_to="categories/logos/%Y/%m/%d", blank=True, null=True)
+
     is_active = db.BooleanField(default=True)   
 
 

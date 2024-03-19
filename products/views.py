@@ -65,8 +65,6 @@ def available_categories(request):
     
     categories_get = Category.objects.filter(is_active=True)
 
-
-
     serializer = CategorySerializer(instance=categories_get, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
