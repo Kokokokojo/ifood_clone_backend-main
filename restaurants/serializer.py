@@ -6,6 +6,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
         model = Restaurant
 
         fields = [
+            'id',
             'name',
             'description',
             'logo',
