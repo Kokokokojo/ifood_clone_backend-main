@@ -14,7 +14,7 @@ admin.site.register(Product, productAdmin)
 
 
 class categoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'product', 'is_active')
+    list_display = ('name', 'description', 'is_active')
     list_filter = ('is_active',)
 
 
