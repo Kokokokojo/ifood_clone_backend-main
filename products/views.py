@@ -34,13 +34,14 @@ def register_product(request):
 
     price_formated = decimal.Decimal(request.data.get('price').replace(',', '.'))
     request.data['price'] = price_formated
+    request.data['restaurant'] = restaurant_id
 
 
     serializer =  ProductSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    serializer.validated_data['restaurant'] = restaurant
     serializer.save()
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+

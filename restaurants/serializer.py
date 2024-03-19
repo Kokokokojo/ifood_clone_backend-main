@@ -2,6 +2,9 @@ from rest_framework import serializers
 from restaurants.models import Restaurant
 
 class RestaurantSerializer(serializers.ModelSerializer):
+
+
+
     class Meta:
         model = Restaurant
 
@@ -16,6 +19,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'city',
             'state',
             'zip_code',
+            'manager',
         ]
 
-        
+    

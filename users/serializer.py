@@ -72,8 +72,6 @@ class UserPatchCreateSerializer(serializers.ModelSerializer):
     
 class UserPatchSerializer(serializers.ModelSerializer):
 
-
-
     class Meta:
         model = CustomUser
         fields = [

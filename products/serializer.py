@@ -4,6 +4,7 @@ from products.models import Product
 class ProductSerializer(serializers.ModelSerializer):
 
     restaurant_name = serializers.ReadOnlyField(source='restaurant.name')
+    
 
     class Meta:
         model = Product
