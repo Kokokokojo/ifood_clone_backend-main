@@ -7,7 +7,6 @@ from categories.serializer import CategorySerializer
 class ProductSerializer(serializers.ModelSerializer):
 
     restaurant_name = serializers.ReadOnlyField(source='restaurant.name')
-    
     categories = CategorySerializer(read_only=True, many=True)
 
     class Meta:
@@ -24,5 +23,4 @@ class ProductSerializer(serializers.ModelSerializer):
             'restaurant',
             'categories',
         ]
-
 

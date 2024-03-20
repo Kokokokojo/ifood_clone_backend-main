@@ -3,6 +3,7 @@ from django.db.models import Q
 from rest_framework.response import Response 
 from rest_framework import status
 from restaurants.models import Restaurant
+from products.models import Product
 from .serializer import ProductSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import parser_classes
@@ -55,3 +56,22 @@ def register_product(request):
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def available_products(request):
+
+    product_get = Product.objects.filter(Q(is_active=True))
+    serializer = ProductSerializer(instance=product_get, many=True)
+
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_product(request, product_id):
+    product_get = Product.objects.get(Q(is_active=True) & Q(id=product_id))
+
+    serializer = ProductSerializer(instance=product_get, many=False)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)

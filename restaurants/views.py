@@ -52,6 +52,7 @@ def available_restaurants(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_restaurant(request, restaurant_id):
 
     restaurant_get = Restaurant.objects.get(Q(is_active=True) & Q(id=restaurant_id))
