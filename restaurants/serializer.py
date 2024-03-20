@@ -15,6 +15,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'description',
             'logo',
             'street',
+            'complement',
             'neighborhood',
             'number',
             'city',
@@ -26,3 +27,6 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'category_name',
             'manager_id',
         ]
+
+
+

@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import Restaurant
+import decimal 
 # Create your views here.
 
 
@@ -16,6 +17,9 @@ from .models import Restaurant
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def register_restaurant(request):
+
+    price_formated = decimal.Decimal(request.data.get('delivery_fee').replace(',', '.'))
+    request.data['delivery_fee'] = price_formated
 
     serializer = RestaurantSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -47,6 +51,16 @@ def available_restaurants(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+def get_restaurant(request, restaurant_id):
+
+    restaurant_get = Restaurant.objects.get(Q(is_active=True) & Q(id=restaurant_id))
+    serializer_restaurant = RestaurantSerializer(instance=restaurant_get, many=False)
+
+
+    return Response(serializer_restaurant.data, status=status.HTTP_200_OK)
+
+
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -57,3 +71,26 @@ def deactivate_restaurant(request, restaurant_id):
     restaurant_get.save()
 
     return Response({'success':True}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_restaurant(request):
+    request.data._mutable=True
+
+    restaurant_id = request.data['restaurant_id']
+
+    price_formated = decimal.Decimal(request.data.get('delivery_fee').replace(',', '.'))
+    request.data['delivery_fee'] = price_formated
+
+    restaurant_get = Restaurant.objects.get(Q(is_active=True) & Q(manager=request.user) & Q(id=restaurant_id))
+
+    serializer = RestaurantSerializer(instance=restaurant_get,
+                                            data=request.data, 
+                                            many=False,
+                                            partial=True,)
+    serializer.is_valid(raise_exception=True)
+ 
+    serializer.save()
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
