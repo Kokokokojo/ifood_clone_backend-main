@@ -10,22 +10,10 @@ class Product(db.Model):
     qtd = db.IntegerField(blank=False, null=False)
     
     restaurant = db.ForeignKey("restaurants.Restaurant", on_delete=db.CASCADE, null=False, blank=False)
-    categories = db.ManyToManyField('products.category', blank=True)
+    categories = db.ManyToManyField('categories.category', blank=True)
     
     is_active = db.BooleanField(default=True)
 
     
-    def __str__(self):
-        return self.name
-
-
-class Category(db.Model):
-    name = db.CharField(max_length=75, blank=False, null=False)
-    description = db.CharField(max_length=100, blank=False, null=False)
-    image = db.ImageField(upload_to="categories/logos/%Y/%m/%d", blank=True, null=True)
-
-    is_active = db.BooleanField(default=True)   
-
-
     def __str__(self):
         return self.name
