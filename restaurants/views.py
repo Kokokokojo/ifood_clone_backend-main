@@ -76,9 +76,43 @@ def available_restaurants(request):
     return paginator.get_paginated_response(serializer.data)
 
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def available_restaurants_search(request):
+    
+    super_restaurant = self.request.query_params.get('super_restaurant','')
+    free_delivery = self.request.query_params.get('free_delivery','')
+    partner_delivery = self.request.query_params.get('partner_delivery','')
+
+    query = Q()
+    paginator = RestaurantsPagination()
+
+    # if search:
+    #     query &= Q(laboratory__in = Laboratorio.objects.filter(name__icontains=search))
+
+    if super_restaurant != '':
+        print(super_restaurant)
+        query &= Q(super_restaurant = True)
+    
+    if free_delivery == True:
+        query &= Q(delivery_fee = 0.00 or 0 or None)
+
+
+    restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query)
+    result_page = paginator.paginate_queryset(restaurant_get, request)
+
+    serializer = RestaurantSerializer(result_page, many=True)
+
+
+    return paginator.get_paginated_response(serializer.data)
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_restaurant(request, restaurant_id):
+
 
     restaurant_get = Restaurant.objects.get(Q(is_active=True) & Q(id=restaurant_id))
     serializer_restaurant = RestaurantSerializer(instance=restaurant_get, many=False)

@@ -23,6 +23,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'zip_code',
             'cnpj',
             'delivery_fee',
+            'super_restaurant',
             'manager',
             'category_name',
             'manager_id',
