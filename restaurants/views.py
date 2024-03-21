@@ -8,7 +8,27 @@ from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import Restaurant
 import decimal 
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 # Create your views here.
+
+
+
+
+class RestaurantsPagination(PageNumberPagination):
+
+    page_size = 10
+
+    def get_paginated_response(self, data):
+        return Response({
+            'page_size': self.page_size,
+            'count': self.page.paginator.count,
+            'total_pages': self.page.paginator.num_pages,
+            'current_page_number': self.page.number,
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'results': data,
+        })
+
 
 
 
@@ -44,11 +64,16 @@ def user_available_restaurants(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def available_restaurants(request):
+    paginator = RestaurantsPagination()
+
     restaurant_get = Restaurant.objects.filter(Q(is_active=True))
-    serializer = RestaurantSerializer(instance=restaurant_get, many=True)
+    
+    result_page = paginator.paginate_queryset(restaurant_get, request)
+
+    serializer = RestaurantSerializer(result_page, many=True)
 
 
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(['GET'])
