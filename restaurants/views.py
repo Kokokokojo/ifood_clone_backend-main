@@ -76,6 +76,7 @@ def deactivate_restaurant(request, restaurant_id):
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def update_restaurant(request):
     request.data._mutable=True
 

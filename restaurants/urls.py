@@ -11,6 +11,5 @@ urlpatterns = [
     path('<int:restaurant_id>/', deactivate_restaurant, name='deactivate-restaurant'),
     path('get/<int:restaurant_id>/', get_restaurant, name='get-restaurant'),
     path('update-restaurant/', update_restaurant, name='update-restaurant'),
-
 ]
 
