@@ -41,8 +41,7 @@ def register_restaurant(request):
 
     price_formated = decimal.Decimal(request.data.get('delivery_fee').replace(',', '.'))
     request.data['delivery_fee'] = price_formated
-    request.data['Partner delivery'] = True if request.data.get('Partner delivery') == 'True' else False
-
+    request.data['partner_delivery'] = True if request.data.get('partner_delivery') == 'True' else False
 
     serializer = RestaurantSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -153,6 +152,7 @@ def update_restaurant(request):
 
     price_formated = decimal.Decimal(request.data.get('delivery_fee').replace(',', '.'))
     request.data['delivery_fee'] = price_formated
+    request.data['partner_delivery'] = True if request.data.get('partner_delivery').capitalize() == 'True' else False
 
     restaurant_get = Restaurant.objects.get(Q(is_active=True) & Q(manager=request.user) & Q(id=restaurant_id))
 
