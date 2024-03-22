@@ -49,7 +49,8 @@ class Restaurant(db.Model):
     delivery_fee = db.DecimalField(max_digits=7, decimal_places=2, blank=False, null=False)
     category = db.ForeignKey('categories.category', on_delete=db.SET_NULL, blank=False, null=True)
     super_restaurant = db.BooleanField(default=False)
-    
+    partner_delivery = db.BooleanField(default=False)
+
     manager = db.ForeignKey('users.customuser', on_delete= db.SET_NULL, null=True, blank=True)
 
     is_active = db.BooleanField(default=True)

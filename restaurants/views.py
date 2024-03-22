@@ -72,7 +72,6 @@ def available_restaurants(request):
 
     serializer = RestaurantSerializer(result_page, many=True)
 
-
     return paginator.get_paginated_response(serializer.data)
 
 
@@ -81,29 +80,37 @@ def available_restaurants(request):
 @permission_classes([IsAuthenticated])
 def available_restaurants_search(request):
     
-    super_restaurant = self.request.query_params.get('super_restaurant','')
-    free_delivery = self.request.query_params.get('free_delivery','')
-    partner_delivery = self.request.query_params.get('partner_delivery','')
+    super_restaurant = False if request.query_params.get('super_restaurant','') == 'false' else True
+    free_delivery = False if request.query_params.get('free_delivery','') == 'false' else True
+    partner_delivery = False if request.query_params.get('partner_delivery','') == 'false' else True
 
     query = Q()
     paginator = RestaurantsPagination()
 
-    # if search:
-    #     query &= Q(laboratory__in = Laboratorio.objects.filter(name__icontains=search))
 
-    if super_restaurant != '':
-        print(super_restaurant)
+    if super_restaurant is True:
         query &= Q(super_restaurant = True)
-    
-    if free_delivery == True:
-        query &= Q(delivery_fee = 0.00 or 0 or None)
 
+    else:
+        # IF I WANT TO NEGATE THE QUERY
+        # query &= ~Q(super_restaurant=True)
+        pass
+
+    if free_delivery is True:
+        query &= Q(delivery_fee = 0)
+    else:
+        pass
+
+    if partner_delivery is True:
+        query &= Q(partner_delivery = True)
+    else:
+        pass
 
     restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query)
+
+
     result_page = paginator.paginate_queryset(restaurant_get, request)
-
     serializer = RestaurantSerializer(result_page, many=True)
-
 
     return paginator.get_paginated_response(serializer.data)
 
