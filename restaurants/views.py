@@ -37,9 +37,12 @@ class RestaurantsPagination(PageNumberPagination):
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def register_restaurant(request):
+    request.data._mutable=True
 
     price_formated = decimal.Decimal(request.data.get('delivery_fee').replace(',', '.'))
     request.data['delivery_fee'] = price_formated
+    request.data['Partner delivery'] = True if request.data.get('Partner delivery') == 'True' else False
+
 
     serializer = RestaurantSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)

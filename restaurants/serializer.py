@@ -24,6 +24,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'cnpj',
             'delivery_fee',
             'super_restaurant',
+            'partner_delivery',
             'manager',
             'category_name',
             'manager_id',
