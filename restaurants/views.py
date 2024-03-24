@@ -103,45 +103,6 @@ def available_restaurants(request):
 
 
 
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def available_restaurants_search(request):
-    
-#     super_restaurant = False if request.query_params.get('super_restaurant','') == 'false' else True
-#     free_delivery = False if request.query_params.get('free_delivery','') == 'false' else True
-#     partner_delivery = False if request.query_params.get('partner_delivery','') == 'false' else True
-
-#     query = Q()
-#     paginator = RestaurantsPagination()
-
-
-#     if super_restaurant is True:
-#         query &= Q(super_restaurant = True)
-
-#     else:
-#         # IF I WANT TO NEGATE THE QUERY
-#         # query &= ~Q(super_restaurant=True)
-#         pass
-
-#     if free_delivery is True:
-#         query &= Q(delivery_fee = 0)
-#     else:
-#         pass
-
-#     if partner_delivery is True:
-#         query &= Q(partner_delivery = True)
-#     else:
-#         pass
-
-#     restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query)
-
-
-#     result_page = paginator.paginate_queryset(restaurant_get, request)
-#     serializer = RestaurantSerializer(result_page, many=True)
-
-#     return paginator.get_paginated_response(serializer.data)
-
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
