@@ -16,7 +16,7 @@ from rest_framework.pagination import PageNumberPagination, LimitOffsetPaginatio
 
 class RestaurantsPagination(PageNumberPagination):
 
-    page_size = 2
+    page_size = 3
 
     def get_paginated_response(self, data):
         return Response({
@@ -68,11 +68,28 @@ def user_available_restaurants(request):
 def available_restaurants(request):
     paginator = RestaurantsPagination()
 
+    restaurant_get = Restaurant.objects.filter(Q(is_active=True)).order_by('id')
+    
+    result_page = paginator.paginate_queryset(restaurant_get, request)
+
+    serializer = RestaurantSerializer(result_page, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def available_restaurants_search(request):
+    
     super_restaurant = False if request.query_params.get('super_restaurant','') == 'false' else True
     free_delivery = False if request.query_params.get('free_delivery','') == 'false' else True
     partner_delivery = False if request.query_params.get('partner_delivery','') == 'false' else True
+    order_by = request.query_params.get('order_by','')
 
     query = Q()
+    paginator = RestaurantsPagination()
+
 
     if super_restaurant is True:
         query &= Q(super_restaurant = True)
@@ -92,14 +109,16 @@ def available_restaurants(request):
     else:
         pass
 
+    restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query).order_by('id')
 
-    restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query)
-    
+
     result_page = paginator.paginate_queryset(restaurant_get, request)
-
     serializer = RestaurantSerializer(result_page, many=True)
 
     return paginator.get_paginated_response(serializer.data)
+
+
+
 
 
 
