@@ -3,6 +3,7 @@ _fixtures/*
 taedb.sqlite3
 media/products/logos/*
 media/restaurants/logos/*
+media/restaurants/banners/*
 media/categories/logos/*
 
 

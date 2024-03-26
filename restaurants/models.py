@@ -37,6 +37,7 @@ class Restaurant(db.Model):
     name = db.CharField(max_length=75, blank=False, null=False)
     description = db.CharField(max_length=100, blank=False, null=False)
     logo = db.ImageField(upload_to="restaurants/logos/%Y/%m/%d", blank=True, null=True)
+    banner = db.ImageField(upload_to="restaurants/banners/%Y/%m/%d", blank=True, null=True)
     street = db.CharField(max_length=75, blank=False, null=False)
     neighborhood = db.CharField(max_length=75, blank=False, null=False)
     complement = db.CharField(max_length=75, blank=False, null=False)

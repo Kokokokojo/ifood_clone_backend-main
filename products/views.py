@@ -61,7 +61,7 @@ def register_product(request):
 @permission_classes([IsAuthenticated])
 def available_products(request):
 
-    product_get = Product.objects.filter(Q(is_active=True))
+    product_get = Product.objects.filter(Q(is_active=True))[:25]
     serializer = ProductSerializer(instance=product_get, many=True)
 
 

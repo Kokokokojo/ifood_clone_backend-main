@@ -8,7 +8,7 @@ from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import Restaurant
 import decimal 
-from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
+from rest_framework.pagination import PageNumberPagination
 # Create your views here.
 
 
@@ -16,7 +16,7 @@ from rest_framework.pagination import PageNumberPagination, LimitOffsetPaginatio
 
 class RestaurantsPagination(PageNumberPagination):
 
-    page_size = 3
+    page_size = 20
 
     def get_paginated_response(self, data):
         return Response({
