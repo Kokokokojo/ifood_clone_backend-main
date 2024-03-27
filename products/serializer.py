@@ -8,6 +8,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     restaurant_name = serializers.ReadOnlyField(source='restaurant.name')
     restaurant_id = serializers.ReadOnlyField(source='restaurant.id')
+    restaurant_delivery_fee = serializers.ReadOnlyField(source='restaurant.delivery_fee')
 
     categories = CategorySerializer(read_only=True, many=True)
 
@@ -23,6 +24,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'image',
             'restaurant_name',
             'restaurant_id',
+            'restaurant_delivery_fee',
             'restaurant',
             'categories',
         ]
