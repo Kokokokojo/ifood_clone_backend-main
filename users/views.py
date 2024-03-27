@@ -431,6 +431,29 @@ def edit_phone_confirm(request):
     serializer = UserSerializer(instance=user, many=False)
 
 
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def publicity_optin(request):
+
+    id =  request.data.get('id', '')
+    receive_ads =  request.data.get('receive_ads', '')
+    print(receive_ads)
+    
+    try:
+        user = CustomUser.objects.get(Q(id=id) & Q(is_active = True))
+        
+    except CustomUser.DoesNotExist:
+        return Response({'user_does_not_exist': 'User with this id does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+    
+    user.receive_ads = receive_ads
+    user.save()
+
+    serializer = UserSerializer(instance=user, many=False)
+
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

@@ -6,7 +6,7 @@ from .views import (SendEmailOTP,
                       ValidateOTPphone, register_user_email, register_user_phone,
                       GoogleLogin, edit_personal_data, LoginUserPhoneOTP, LoginUserEmailOTP,
                       RegisterPhoneGoogle, ValidateGoogleOTPphone, edit_email, edit_email_confirm,
-                      edit_phone, edit_phone_confirm
+                      edit_phone, edit_phone_confirm, publicity_optin,
                       )
 
 
@@ -44,6 +44,8 @@ urlpatterns = [
     path('edit-user-email-confirm/', edit_email_confirm, name='edit-email-confirm'),
     path('edit-user-phone/', edit_phone, name='edit-phone'),
     path('edit-user-phone-confirm/', edit_phone_confirm, name='edit-phone-confirm'),
+    path('publicity-optin/', publicity_optin, name='pub'),
+
     # Editar usuario 
 
 ]

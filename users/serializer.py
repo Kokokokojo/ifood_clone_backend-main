@@ -24,6 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
             'is_active',
             'is_superuser',
             'is_staff',
+            'receive_ads',
         ]
 
     def create(self, validated_data):
