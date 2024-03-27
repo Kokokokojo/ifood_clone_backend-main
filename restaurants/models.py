@@ -52,6 +52,7 @@ class Restaurant(db.Model):
     super_restaurant = db.BooleanField(default=False)
     partner_delivery = db.BooleanField(default=False)
 
+
     manager = db.ForeignKey('users.customuser', on_delete= db.SET_NULL, null=True, blank=True)
 
     is_active = db.BooleanField(default=True)

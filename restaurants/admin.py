@@ -6,7 +6,7 @@ from restaurants.models import Restaurant
 
 class restaurantAdmin(admin.ModelAdmin):
     list_display = ('name', 'city', 'state', 'zip_code', 'number', 'is_active',)
-    list_filter = ('is_active', 'state', 'city',)
+    list_filter = ('is_active', 'state',)
 
 
 
