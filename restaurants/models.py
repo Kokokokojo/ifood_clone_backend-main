@@ -40,7 +40,7 @@ class Restaurant(db.Model):
     banner = db.ImageField(upload_to="restaurants/banners/%Y/%m/%d", blank=True, null=True)
     street = db.CharField(max_length=75, blank=False, null=False)
     neighborhood = db.CharField(max_length=75, blank=False, null=False)
-    complement = db.CharField(max_length=75, blank=False, null=False)
+    complement = db.CharField(max_length=75, blank=True, null=True)
     number = db.CharField(max_length=100, blank=False, null=False)
     city = db.CharField(max_length=75, blank=False, null=False)
     state = db.CharField(max_length=3, choices=States.choices, blank=False, null=False)
