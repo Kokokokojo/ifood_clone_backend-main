@@ -128,3 +128,14 @@ def update_product(request):
 
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_product(request, product_id):
+
+    product_get = Product.objects.get(Q(is_active=True) & Q(id=product_id))
+    product_get.is_active = False
+    product_get.save()  
+
+    return Response({'success':True}, status=status.HTTP_204_NO_CONTENT)
