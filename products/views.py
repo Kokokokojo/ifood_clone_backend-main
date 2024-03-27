@@ -69,6 +69,17 @@ def available_products(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def available_products_restaurant(request, id_restaurant):
+    
+    product_get = Product.objects.filter(Q(is_active=True) & Q(restaurant = id_restaurant))
+    serializer = ProductSerializer(instance=product_get, many=True)
+
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
 def get_product(request, product_id):
     product_get = Product.objects.get(Q(is_active=True) & Q(id=product_id))
 
