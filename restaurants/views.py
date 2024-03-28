@@ -68,7 +68,7 @@ def user_available_restaurants(request):
 def available_restaurants(request):
     paginator = RestaurantsPagination()
 
-    restaurant_get = Restaurant.objects.filter(Q(is_active=True)).order_by('id')
+    restaurant_get = Restaurant.objects.filter(Q(is_active=True))
     
     result_page = paginator.paginate_queryset(restaurant_get, request)
 
@@ -109,7 +109,7 @@ def available_restaurants_search(request):
     else:
         pass
 
-    restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query).order_by('id')
+    restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query)
 
 
     result_page = paginator.paginate_queryset(restaurant_get, request)
