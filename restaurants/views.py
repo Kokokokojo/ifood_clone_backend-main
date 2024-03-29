@@ -119,10 +119,6 @@ def available_restaurants_search(request):
 
 
 
-
-
-
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_restaurant(request, restaurant_id):

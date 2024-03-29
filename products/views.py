@@ -69,10 +69,19 @@ def available_products(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def available_products_restaurant(request, id_restaurant):
+
+    search = request.query_params.get('q','') 
+    query = Q()
+
+    if search:
+        query &= Q(name__icontains = search)
+        print(query)
+        print(search)
     
-    product_get = Product.objects.filter(Q(is_active=True) & Q(restaurant = id_restaurant))
+    product_get = Product.objects.filter(Q(is_active=True) & Q(restaurant = id_restaurant) & Q(name__icontains = search))
+
+
     serializer = ProductSerializer(instance=product_get, many=True)
 
 
