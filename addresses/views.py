@@ -5,6 +5,8 @@ from rest_framework import status
 from addresses.serializer import AddressSerializer
 from rest_framework.permissions import IsAuthenticated
 from .models import Address
+from django.db import transaction
+
 
 # Create your views here.
 
@@ -21,3 +23,22 @@ def user_addresses(request):
     serializer = AddressSerializer(instance=address_get, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def select_active_address(request):
+
+    address_id = request.data['address_id']
+    user_id = request.data['user_id']
+
+    with transaction.atomic():
+        Address.objects.all().update(is_selected=False)
+
+        address = Address.objects.get(Q(id = address_id) & Q(is_active = True) & Q(user = user_id))
+        address.is_selected = True
+        address.save()
+
+
+    return Response({'success':'New active address set'}, status=status.HTTP_200_OK)
