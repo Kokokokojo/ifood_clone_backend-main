@@ -183,6 +183,7 @@ class LoginUserEmailOTP(APIView):
 def me(request):
 
     user_get = CustomUser.objects.get(Q(email=request.user.email) & Q(is_active=True))
+
     serializer_user = UserSerializer(instance=user_get, many=False)
 
     return Response(serializer_user.data, status=status.HTTP_200_OK)

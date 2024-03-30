@@ -1,10 +1,12 @@
 from rest_framework import serializers
 from users.models import CustomUser
-from addresses.models import Address
+from addresses.serializer import AddressSerializer
 from users.validators import CustomUserValidator
 
 
 class UserSerializer(serializers.ModelSerializer):
+
+    addresses = AddressSerializer(many=True, read_only=True)
 
     class Meta:
         model = CustomUser
@@ -16,7 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
             'phone',
             'email',
             'cpf',
-
             'created_at',
             'updated_at',
             'phone_confirmed_in',
@@ -25,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
             'is_superuser',
             'is_staff',
             'receive_ads',
+            'addresses',
         ]
 
     def create(self, validated_data):

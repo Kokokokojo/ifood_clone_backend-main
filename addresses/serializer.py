@@ -20,6 +20,8 @@ class AddressSerializer(serializers.ModelSerializer):
             'user',
             'user_name',
             'is_active' ,
+            'is_selected',
+            'type_of',
         ]
 
 
