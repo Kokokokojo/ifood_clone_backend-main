@@ -55,7 +55,6 @@ def register_address(request):
 
     request.data['is_selected'] = True
 
-    print(request.data)
 
     if request.data['type_of'] == 'W':
         request.data['name'] = 'Trabalho'
