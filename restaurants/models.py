@@ -41,6 +41,8 @@ class Restaurant(db.Model):
     street = db.CharField(max_length=75, blank=False, null=False)
     neighborhood = db.CharField(max_length=75, blank=False, null=False)
     complement = db.CharField(max_length=75, blank=True, null=True)
+    reference_point = db.CharField(max_length=75, blank=True, null=True)
+
     number = db.CharField(max_length=100, blank=False, null=False)
     city = db.CharField(max_length=75, blank=False, null=False)
     state = db.CharField(max_length=3, choices=States.choices, blank=False, null=False)

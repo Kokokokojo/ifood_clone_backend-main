@@ -7,7 +7,10 @@ match system():
         call('cls', shell=True)
         call(f'python manage.py makemigrations', shell=True)
         call(f'python manage.py migrate', shell=True)
+        call(f'python manage.py runserver', shell=True)
+
     case _:
         call('clear', shell=True)
         call(f'python3 manage.py makemigrations', shell=True)
         call(f'python3 manage.py migrate', shell=True)
+        call(f'python3 manage.py runserver', shell=True)

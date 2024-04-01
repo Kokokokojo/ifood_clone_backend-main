@@ -34,7 +34,7 @@ def select_active_address(request):
     user_id = request.data['user_id']
 
     with transaction.atomic():
-        Address.objects.all().update(is_selected=False)
+        Address.objects.filter(Q(user = user_id)).update(is_selected=False)
 
         address = Address.objects.get(Q(id = address_id) & Q(is_active = True) & Q(user = user_id))
         address.is_selected = True
@@ -42,3 +42,35 @@ def select_active_address(request):
 
 
     return Response({'success':'New active address set'}, status=status.HTTP_200_OK)
+
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def register_address(request):
+    # request.data._mutable=True
+
+    with transaction.atomic():
+        Address.objects.filter(Q(is_selected = True) & Q(user = request.user)).update(is_selected = False)
+
+    request.data['is_selected'] = True
+
+    print(request.data)
+
+    if request.data['type_of'] == 'W':
+        request.data['name'] = 'Trabalho'
+
+    elif request.data['type_of'] == 'H':
+        request.data['name'] = 'Casa'
+
+    else:
+        request.data['name'] = request.data['street']
+
+
+
+    serializer = AddressSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    serializer.save()
+
+    return Response(serializer.data, status=status.HTTP_201_CREATED)

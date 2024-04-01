@@ -17,6 +17,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
             'banner',
             'street',
             'complement',
+            'reference_point',
             'neighborhood',
             'number',
             'city',

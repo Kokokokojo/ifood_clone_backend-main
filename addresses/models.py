@@ -49,7 +49,7 @@ class Address(db.Model):
     number = db.CharField(max_length=75, blank=False, null=False)
     complement = db.CharField(max_length=75, blank=True, null=True)
     city = db.CharField(max_length=75, blank=False, null=False)
-    zip_code = db.CharField(max_length=8, blank=False, null=False)
+    zip_code = db.CharField(max_length=9, blank=False, null=False)
 
     user = db.ForeignKey('users.CustomUser', related_name='addresses', on_delete=db.CASCADE, null=True, blank=False)
     state = db.CharField(max_length=3, choices=States.choices, blank=False, null=False)
