@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from .models import Restaurant
+from categories.models import Category
 import decimal 
 from rest_framework.pagination import PageNumberPagination
 
@@ -68,10 +69,25 @@ def user_available_restaurants(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def available_restaurants(request):
-    paginator = RestaurantsPagination()
 
-    restaurant_get = Restaurant.objects.filter(Q(is_active=True))
-    
+    category_id = request.query_params.get('category_id','')
+    order_by = request.query_params.get('order_by').strip() if request.query_params.get('order_by').strip() else 'id'
+
+    paginator = RestaurantsPagination()
+    query = Q()
+
+
+    if category_id:
+        try:
+            id_cat = int(category_id)
+            category = Category.objects.get(Q(id=id_cat) & Q(is_active=True))
+            query &= Q(category = category)
+
+        except Category.DoesNotExist:
+            return Response({'error_on_category_id':'Category id does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+    restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query).order_by(f'{"" if order_by == "id" else "-"}{order_by}')
     result_page = paginator.paginate_queryset(restaurant_get, request)
 
     serializer = RestaurantSerializer(result_page, many=True)
@@ -87,7 +103,10 @@ def available_restaurants_search(request):
     super_restaurant = False if request.query_params.get('super_restaurant','') == 'false' else True
     free_delivery = False if request.query_params.get('free_delivery','') == 'false' else True
     partner_delivery = False if request.query_params.get('partner_delivery','') == 'false' else True
-    order_by = request.query_params.get('order_by','')
+    
+    category_id = request.query_params.get('category_id','')
+    order_by = request.query_params.get('order_by','id').strip()
+
 
     query = Q()
     paginator = RestaurantsPagination()
@@ -101,17 +120,26 @@ def available_restaurants_search(request):
         # query &= ~Q(super_restaurant=True)
         pass
 
+
     if free_delivery is True:
         query &= Q(delivery_fee = 0)
-    else:
-        pass
+
 
     if partner_delivery is True:
         query &= Q(partner_delivery = True)
-    else:
-        pass
 
-    restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query)
+
+    if category_id:
+        try:
+            id_cat = int(category_id)
+            category = Category.objects.get(Q(id=id_cat) & Q(is_active=True))
+            query &= Q(category = category)
+
+        except Category.DoesNotExist:
+            pass
+
+
+    restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query).order_by(order_by)
 
 
     result_page = paginator.paginate_queryset(restaurant_get, request)
