@@ -61,3 +61,17 @@ class Restaurant(db.Model):
 
     def __str__(self):
         return self.name
+
+
+
+class RestaurantRating(db.Model):
+
+    class PossibleRatings(db.IntegerChoices):
+        ONE_STAR = 1, '1 Star'
+        TWO_STAR = 2, '2 Stars'
+        THREE_STAR = 3, '3 Stars'
+        FOUR_STAR = 4, '4 Stars'
+        FIVE_STAR = 5, '5 Stars'
+
+    rating = db.IntegerField(choices=PossibleRatings.choices, default=5, blank=False, null=False)
+    restaurant = db.ForeignKey('restaurants.restaurant', on_delete= db.CASCADE, null=False, blank=False)

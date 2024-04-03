@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from django.db.models import Q
+from django.db.models import Q, Avg
 from rest_framework.response import Response 
 from rest_framework import status
 from restaurants.serializer import RestaurantSerializer
@@ -111,7 +111,14 @@ def available_restaurants_search(request):
             pass
 
 
-    restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query).order_by(f'{"" if order_by == "id" else "-"}{order_by}')
+    if order_by == 'rating':
+        restaurant_get = Restaurant.objects.annotate(avg_rating=Avg('restaurantrating__rating')).filter(Q(is_active=True) & query).order_by('-avg_rating')
+
+    elif order_by == 'price':
+        restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query).order_by('-product__price')
+
+    else:
+        restaurant_get = Restaurant.objects.filter(Q(is_active=True) & query).order_by(f'{"" if order_by == "id" else "-"}{order_by}')
 
 
     result_page = paginator.paginate_queryset(restaurant_get, request)

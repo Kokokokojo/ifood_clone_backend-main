@@ -1,5 +1,5 @@
 from django.contrib import admin
-from restaurants.models import Restaurant
+from restaurants.models import Restaurant, RestaurantRating
 
 # Register your models here.
 
@@ -9,5 +9,11 @@ class restaurantAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'state',)
 
 
+class restaurantRatingAdmin(admin.ModelAdmin):
+    list_display = ('rating', 'restaurant',)
+    list_filter = ('rating',)
+
+
 
 admin.site.register(Restaurant, restaurantAdmin)
+admin.site.register(RestaurantRating, restaurantRatingAdmin)
