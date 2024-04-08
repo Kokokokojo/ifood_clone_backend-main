@@ -60,8 +60,14 @@ def register_product(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def available_products(request):
+    name = request.query_params.get('name','').strip()
 
-    product_get = Product.objects.filter(Q(is_active=True))[:25]
+    query = Q()
+    
+    if name != '':
+        query &= Q(name__icontains = str(name))
+
+    product_get = Product.objects.filter(Q(is_active=True) & query)[:50]
     serializer = ProductSerializer(instance=product_get, many=True)
 
 

@@ -77,6 +77,8 @@ def available_restaurants_search(request):
     partner_delivery = False if request.query_params.get('partner_delivery','') == 'false' else True
     
     category_id = request.query_params.get('category_id','')
+    name = request.query_params.get('name','').strip()
+
     order_by = request.query_params.get('order_by').strip() if request.query_params.get('order_by').strip() else 'id'
 
 
@@ -101,6 +103,9 @@ def available_restaurants_search(request):
         query &= Q(partner_delivery = True)
 
 
+    if name != '':
+        query &= Q(name__icontains = str(name))
+
     if category_id:
         try:
             id_cat = int(category_id)
@@ -109,6 +114,10 @@ def available_restaurants_search(request):
 
         except Category.DoesNotExist:
             pass
+
+
+
+
 
 
     if order_by == 'rating':
@@ -150,6 +159,7 @@ def deactivate_restaurant(request, restaurant_id):
     restaurant_get.save()
 
     return Response({'success':True}, status=status.HTTP_204_NO_CONTENT)
+
 
 
 @api_view(['PATCH'])
