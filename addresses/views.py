@@ -73,3 +73,18 @@ def register_address(request):
     serializer.save()
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deactivate_Address(request, address_id):
+
+
+    address_get = Address.objects.get(Q(is_active=True) & Q(user=request.user) & Q(id=address_id))
+
+    address_get.is_active = False
+    address_get.save()
+
+    return Response({'success':True}, status=status.HTTP_204_NO_CONTENT)
