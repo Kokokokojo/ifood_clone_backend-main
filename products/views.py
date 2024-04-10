@@ -63,7 +63,6 @@ def available_products(request):
     name = request.query_params.get('name','').strip()
 
     query = Q()
-    
     if name != '':
         query &= Q(name__icontains = str(name))
 

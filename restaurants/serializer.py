@@ -46,10 +46,10 @@ class RestaurantSerializer(serializers.ModelSerializer):
 
     def get_restaurant_avg_rating(self, obj):
         average_rating = RestaurantRating.objects.filter(restaurant=obj).aggregate(restaurant_avg_rating=Avg('rating'))['restaurant_avg_rating']
-        
-        formatted_rating = "{:.1f}".format(average_rating)
+        if average_rating:
+            formatted_rating = "{:.1f}".format(average_rating)
 
-        return formatted_rating
+            return formatted_rating
 
 
 
