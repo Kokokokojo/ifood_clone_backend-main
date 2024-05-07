@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'restaurants',
     'addresses',
     'categories',
+    'payments',
 
     # Google auth 
     'allauth',
