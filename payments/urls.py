@@ -1,7 +1,7 @@
 from django.urls import path
-from payments.views import test_payment
+from payments.views import save_stripe_info
 
 urlpatterns = [
-    path('test-payment/', test_payment),
+    path('save-stripe-info/', save_stripe_info),
 ]
 
