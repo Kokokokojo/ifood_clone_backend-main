@@ -21,7 +21,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'name',
             'description',
             'price',
-            'qtd',
+            'total_sales',
             'image',
             'restaurant_name',
             'restaurant_id',

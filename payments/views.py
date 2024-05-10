@@ -6,12 +6,13 @@ from rest_framework.permissions import IsAuthenticated
 from payments.serializer import OrderSerializer
 from users.models import CustomUser
 from restaurants.models import Restaurant
+from products.models import Product
 from payments.models import Order
 from dotenv import load_dotenv
 import os 
 import decimal
-import json
 import stripe
+from django.db.models import F
 
 
 # Create your views here.
@@ -48,6 +49,9 @@ def generate_order(data, amount):
 
         order.items.add(*products_ids) 
 
+        Product.objects.filter(id__in=products_ids, is_active=True).update(total_sales=F('total_sales') + 1)
+
+
         return order_serialized.data
     
     except CustomUser.DoesNotExist:
@@ -72,9 +76,9 @@ def save_stripe_info(request):
      
     # if the array is empty it means the email has not been used yet  
     if len(customer_data) == 0:
-        # creating customer
         customer = stripe.Customer.create(
         email=email, payment_method=payment_method_id)
+
     else:
         customer = customer_data[0]
         extra_msg = "Customer already existed."

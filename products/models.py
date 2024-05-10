@@ -7,7 +7,7 @@ class Product(db.Model):
     description = db.TextField(blank=False, null=False)
     image = db.ImageField(upload_to="products/logos/%Y/%m/%d", blank=True, null=True)
     price = db.DecimalField(max_digits=7, decimal_places=2, blank=False, null=False)
-    qtd = db.IntegerField(blank=False, null=False)
+    total_sales = db.IntegerField(blank=True, null=True, default=0)
     
     restaurant = db.ForeignKey("restaurants.Restaurant", on_delete=db.CASCADE, null=False, blank=False)
     categories = db.ManyToManyField('categories.category', blank=True)
