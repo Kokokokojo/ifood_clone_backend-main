@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Avg
 from rest_framework.response import Response 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -27,10 +27,17 @@ def avg_price_over_time(request):
     except ValueError:
         return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
 
+    avg_price = Order.objects.filter(query).aggregate(avg_price=Avg('price'))
 
     orders_within_range = Order.objects.filter(query)
     order_serialized = OrderSerializer(instance=orders_within_range, many=True)
-    return Response({'data': order_serialized.data}, status=status.HTTP_200_OK)
+    
+    for order in order_serialized.data:
+        order['avg_order_price'] = avg_price['avg_price']
+
+    sliced_data = order_serialized.data[:20] 
+
+    return Response({'data': sliced_data,}, status=status.HTTP_200_OK)
 
 
 
