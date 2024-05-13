@@ -9,3 +9,5 @@ class CategorySalesSerializer(serializers.Serializer):
 class ProductSalesSerializer(serializers.Serializer):
     name = serializers.CharField()
     total_sales = serializers.DecimalField(max_digits=10, decimal_places=2)
+    price = serializers.DecimalField(max_digits=7, decimal_places=2)
+
