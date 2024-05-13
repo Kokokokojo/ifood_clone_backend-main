@@ -101,7 +101,7 @@ def sales_performance_product(request):
         return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-    top_products = Product.objects.filter(query & Q()).order_by('-total_sales')
+    top_products = Product.objects.filter(query).order_by('-total_sales')
     serializer = ProductSalesSerializer(top_products, many=True)
 
     return Response({'data': serializer.data[:int(topNum)]}, status=status.HTTP_200_OK)
