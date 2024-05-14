@@ -1,19 +1,20 @@
 from rest_framework.decorators import api_view, permission_classes
-from django.db.models import Q, Sum, Avg
+from django.db.models import Q, Sum
 from rest_framework.response import Response 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
 from payments.models import Order
-from payments.serializer import OrderSerializer
 from products.serializer import  Product
 from .serializer import CategorySalesSerializer, ProductSalesSerializer
+from collections import Counter
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def avg_price_over_time(request):
+def top_selling_restaurants(request):
     startDate = request.query_params.get('startDate', '')
     endDate = request.query_params.get('endDate', '')
+    topNum = request.query_params.get('topNum', '')
 
     query = Q()
 
@@ -27,17 +28,18 @@ def avg_price_over_time(request):
     except ValueError:
         return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
 
-    avg_price = Order.objects.filter(query).aggregate(avg_price=Avg('price'))
-
     orders_within_range = Order.objects.filter(query)
-    order_serialized = OrderSerializer(instance=orders_within_range, many=True)
-    
-    for order in order_serialized.data:
-        order['avg_order_price'] = avg_price['avg_price']
 
-    sliced_data = order_serialized.data[:20] 
+    restaurants = []
+    for order in orders_within_range:
+        for item in order.items.all():
+            restaurants.append(item.restaurant)
 
-    return Response({'data': sliced_data,}, status=status.HTTP_200_OK)
+    restaurant_counts = Counter(restaurants)
+    sorted_restaurants = sorted(restaurant_counts.items(), key=lambda x: x[1], reverse=True)
+    sorted_restaurants_dict = [{"restaurant": str(restaurant), "total_orders": count} for restaurant, count in sorted_restaurants]
+
+    return Response({'data': sorted_restaurants_dict[:int(topNum)],}, status=status.HTTP_200_OK)
 
 
 

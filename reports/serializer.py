@@ -11,3 +11,4 @@ class ProductSalesSerializer(serializers.Serializer):
     total_sales = serializers.DecimalField(max_digits=10, decimal_places=2)
     price = serializers.DecimalField(max_digits=7, decimal_places=2)
 
+
