@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count
 from rest_framework.response import Response 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -28,18 +28,12 @@ def top_selling_restaurants(request):
     except ValueError:
         return Response({'error': 'Invalid date format'}, status=status.HTTP_400_BAD_REQUEST)
 
-    orders_within_range = Order.objects.filter(query)
-
-    restaurants = []
-    for order in orders_within_range:
-        for item in order.items.all():
-            restaurants.append(item.restaurant)
-
-    restaurant_counts = Counter(restaurants)
-    sorted_restaurants = sorted(restaurant_counts.items(), key=lambda x: x[1], reverse=True)
-    sorted_restaurants_dict = [{"restaurant": str(restaurant), "total_orders": count} for restaurant, count in sorted_restaurants]
-
-    return Response({'data': sorted_restaurants_dict[:int(topNum)],}, status=status.HTTP_200_OK)
+    orders_within_range = Order.objects.filter(query).prefetch_related("items")
+    restaurant_counts = orders_within_range.values('restaurant__name').annotate(total_orders=Count('items')).order_by('-total_orders')
+    
+    sorted_restaurants_dict = [{"restaurant": item['restaurant__name'], "total_orders": item['total_orders']} for item in restaurant_counts[:int(topNum)]]
+   
+    return Response({'data': sorted_restaurants_dict}, status=status.HTTP_200_OK)
 
 
 
