@@ -1,5 +1,7 @@
-from rest_framework.decorators import api_view, permission_classes
-from django.db.models import Q
+import os 
+import decimal
+import stripe
+from django.db.models import Q, F
 from rest_framework.response import Response 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -8,11 +10,9 @@ from users.models import CustomUser
 from restaurants.models import Restaurant
 from products.models import Product
 from payments.models import Order
+from products.serializer import ProductSerializer
 from dotenv import load_dotenv
-import os 
-import decimal
-import stripe
-from django.db.models import F
+from rest_framework.decorators import api_view, permission_classes
 
 
 # Create your views here.
@@ -42,14 +42,19 @@ def generate_order(data, amount):
         price_formated = decimal.Decimal(str(amount).replace(',', '.'))
 
         order = Order.objects.create(user=user, restaurant=restaurant, description=description, price=price_formated, **data)
-        order_serialized = OrderSerializer(instance=order, many=False)
+        order_serialized = OrderSerializer(instance=order, many=False).data
 
         order.items.add(*products_ids) 
 
         Product.objects.filter(id__in=products_ids, is_active=True).update(total_sales=F('total_sales') + 1)
 
+        updated_products = Product.objects.filter(id__in=products_ids, is_active=True)
+        products_serialized = ProductSerializer(instance=updated_products, many=True).data
 
-        return order_serialized.data
+
+        order_serialized['products'] = products_serialized
+
+        return order_serialized
     
     except CustomUser.DoesNotExist:
         return "error_does_not_exist"
