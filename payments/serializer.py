@@ -19,6 +19,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'user',
             'created_at',
             'avg_order_price',
+            'type',
         ]
 
     # def get_avg_order_price(self, obj):

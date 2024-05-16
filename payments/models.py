@@ -5,9 +5,15 @@ from django.db import models as db
 class OrderStatus(db.TextChoices):
     PENDING = 'AG', 'Aguardando'
     IN_PRODUCTION = 'EP', 'Em produção'
+    TAKEOUT = 'TK', 'Pedido pronto para retirada'
     EN_ROUTE = 'ER', 'Em rota de entrega'
     DELIVERED = 'DE', 'Entregue'
     CANCELLED = 'CA', 'Cancelado'
+
+class OrderType(db.TextChoices):
+    TAKEOUT = 'TK', 'Irá retirar o pedido na loja'
+    DELIVERY = 'EE', 'Irá ser entregue'
+
 
 class Order(db.Model):
     description = db.TextField(blank=True, null=True, default="")
@@ -21,9 +27,10 @@ class Order(db.Model):
     restaurant = db.ForeignKey('restaurants.Restaurant', on_delete=db.CASCADE, null=False, blank=False)
     user = db.ForeignKey("users.CustomUser", on_delete=db.CASCADE, null=False, blank=False)
 
-    created_at = db.DateTimeField(auto_now_add=True)
     status = db.CharField(max_length=20, choices=OrderStatus.choices, default=OrderStatus.PENDING)
+    type = db.CharField(max_length=20, choices=OrderType.choices, default=OrderType.TAKEOUT)
 
-    
+    created_at = db.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.description
