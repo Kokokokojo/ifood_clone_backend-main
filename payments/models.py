@@ -31,6 +31,7 @@ class Order(db.Model):
     type = db.CharField(max_length=20, choices=OrderType.choices, default=OrderType.TAKEOUT)
 
     created_at = db.DateTimeField(auto_now_add=True)
+    updated_at = db.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.description
