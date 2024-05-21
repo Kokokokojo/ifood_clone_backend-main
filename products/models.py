@@ -14,6 +14,15 @@ class Product(db.Model):
     
     is_active = db.BooleanField(default=True)
 
+    @property
+    def restaurant_address(self):
+        full_address = ""
+        restaurant = self.restaurant  
+
+        full_address = f'{restaurant.street} {restaurant.neighborhood} {restaurant.number}'
+
+        return full_address
+
     
     def __str__(self):
         return self.name
