@@ -9,7 +9,7 @@ from payments.serializer import OrderSerializer
 from users.models import CustomUser
 from restaurants.models import Restaurant
 from products.models import Product
-from payments.models import Order
+from payments.models import Order, OrderStatus
 from products.serializer import ProductSerializer
 from dotenv import load_dotenv
 from rest_framework.decorators import api_view, permission_classes
@@ -106,3 +106,75 @@ def save_stripe_info(request):
     return Response(status=status.HTTP_200_OK, 
         data={'message': 'Success', 'data': {'customer_id': customer.id, 'order':order}, 'extra_msg':extra_msg}
     )    
+
+
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def mark_order_ready_tk(request):
+    id_order = request.data.get('id_order', '')
+    id_user = request.data.get('id_user', '')
+
+    try:
+        user = CustomUser.objects.get(Q(id_user=id_user) & Q(is_active = True))
+        order = Order.objects.get(Q(id=id_order) & Q(user=user) & Q(is_active = True))
+
+        order.status = OrderStatus.TAKEOUT
+        order.save()
+
+    except CustomUser.DoesNotExist:
+        return Response({'message': 'User does not exist.', "success":False}, status=status.HTTP_404_NOT_FOUND)
+    
+    except Order.DoesNotExist:
+        return Response({'message': 'Order does not exist.', "success":False}, status=status.HTTP_404_NOT_FOUND)
+
+
+    return Response({'message': 'Order status updated to ready.', "success":True}, status=status.HTTP_200_OK)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def mark_order_done_tk(request):
+    id_order = request.data.get('id_order', '')
+    id_user = request.data.get('id_user', '')
+
+    try:
+        user = CustomUser.objects.get(Q(id_user=id_user) & Q(is_active = True))
+        order = Order.objects.get(Q(id=id_order) & Q(user=user) & Q(is_active = True))
+
+        order.status = OrderStatus.DELIVERED
+        order.save()
+        
+    except CustomUser.DoesNotExist:
+        return Response({'message': 'User does not exist.', "success":False}, status=status.HTTP_404_NOT_FOUND)
+    
+    except Order.DoesNotExist:
+        return Response({'message': 'Order does not exist.', "success":False}, status=status.HTTP_404_NOT_FOUND)
+
+
+    return Response({'message': 'Order status updated to done.', "success":True}, status=status.HTTP_200_OK)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def mark_order_cancelled_tk(request):
+    id_order = request.data.get('id_order', '')
+    id_user = request.data.get('id_user', '')
+
+    try:
+        user = CustomUser.objects.get(Q(id_user=id_user) & Q(is_active = True))
+        order = Order.objects.get(Q(id=id_order) & Q(user=user) & Q(is_active = True))
+
+        order.status = OrderStatus.CANCELLED
+        order.save()
+        
+    except CustomUser.DoesNotExist:
+        return Response({'message': 'User does not exist.', "success":False}, status=status.HTTP_404_NOT_FOUND)
+    
+    except Order.DoesNotExist:
+        return Response({'message': 'Order does not exist.', "success":False}, status=status.HTTP_404_NOT_FOUND)
+
+
+    return Response({'message': 'Order status updated to done.', "success":True}, status=status.HTTP_200_OK)
+
