@@ -113,12 +113,12 @@ def save_stripe_info(request):
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def mark_order_ready_tk(request):
-    id_order = request.data.get('id_order', '')
-    id_user = request.data.get('id_user', '')
+    user_id = request.data.get('user_id', '')
+    order_id = request.data.get('order_id', '')
 
     try:
-        user = CustomUser.objects.get(Q(id_user=id_user) & Q(is_active = True))
-        order = Order.objects.get(Q(id=id_order) & Q(user=user) & Q(is_active = True))
+        user = CustomUser.objects.get(Q(id=user_id) & Q(is_active = True))
+        order = Order.objects.get(Q(id=order_id) & Q(user=user))
 
         order.status = OrderStatus.TAKEOUT
         order.save()
@@ -136,12 +136,12 @@ def mark_order_ready_tk(request):
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def mark_order_done_tk(request):
-    id_order = request.data.get('id_order', '')
-    id_user = request.data.get('id_user', '')
+    user_id = request.data.get('user_id', '')
+    order_id = request.data.get('order_id', '')
 
     try:
-        user = CustomUser.objects.get(Q(id_user=id_user) & Q(is_active = True))
-        order = Order.objects.get(Q(id=id_order) & Q(user=user) & Q(is_active = True))
+        user = CustomUser.objects.get(Q(id=user_id) & Q(is_active = True))
+        order = Order.objects.get(Q(id=order_id) & Q(user=user))
 
         order.status = OrderStatus.DELIVERED
         order.save()
@@ -159,12 +159,12 @@ def mark_order_done_tk(request):
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def mark_order_cancelled_tk(request):
-    id_order = request.data.get('id_order', '')
-    id_user = request.data.get('id_user', '')
+    user_id = request.data.get('user_id', '')
+    order_id = request.data.get('order_id', '')
 
     try:
-        user = CustomUser.objects.get(Q(id_user=id_user) & Q(is_active = True))
-        order = Order.objects.get(Q(id=id_order) & Q(user=user) & Q(is_active = True))
+        user = CustomUser.objects.get(Q(id=user_id) & Q(is_active = True))
+        order = Order.objects.get(Q(id=order_id) & Q(user=user))
 
         order.status = OrderStatus.CANCELLED
         order.save()
