@@ -1,0 +1,3 @@
+OLá {{email}}, Seu pedido foi cancelado. 
+
+ - Equipe ByteFood.

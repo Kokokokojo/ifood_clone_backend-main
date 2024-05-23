@@ -1,0 +1,3 @@
+OLá {{email}}, Seu pedido está pronto para ser retirado. 
+
+ - Equipe ByteFood.

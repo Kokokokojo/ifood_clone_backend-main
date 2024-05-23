@@ -13,6 +13,7 @@ from payments.models import Order, OrderStatus
 from products.serializer import ProductSerializer
 from dotenv import load_dotenv
 from rest_framework.decorators import api_view, permission_classes
+from _utils.utils import send_mail, send_sms
 
 
 # Create your views here.
@@ -123,6 +124,8 @@ def mark_order_ready_tk(request):
         order.status = OrderStatus.TAKEOUT
         order.save()
 
+        send_sms(user.phone, "Seu pedido está pronto para ser retirado. - Bytefood")
+
     except CustomUser.DoesNotExist:
         return Response({'message': 'User does not exist.', "success":False}, status=status.HTTP_404_NOT_FOUND)
     
@@ -145,6 +148,9 @@ def mark_order_done_tk(request):
 
         order.status = OrderStatus.DELIVERED
         order.save()
+
+        send_sms(user.phone, "Pedido entregue. Bom apetite! - Bytefood")
+
         
     except CustomUser.DoesNotExist:
         return Response({'message': 'User does not exist.', "success":False}, status=status.HTTP_404_NOT_FOUND)
@@ -168,6 +174,10 @@ def mark_order_cancelled_tk(request):
 
         order.status = OrderStatus.CANCELLED
         order.save()
+
+        send_sms(user.phone, "Seu pedido foi cancelado com sucesso. - Bytefood")
+        send_mail(user.email, 'cancelled')
+
         
     except CustomUser.DoesNotExist:
         return Response({'message': 'User does not exist.', "success":False}, status=status.HTTP_404_NOT_FOUND)
